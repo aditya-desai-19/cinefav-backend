@@ -1,6 +1,8 @@
+//@ts-check
 import bcrypt from 'bcrypt';
 import { User } from '../models/user.models.js';
-import { SALT_ROUNDS } from '../../constants.js';
+import { SALT_ROUNDS, SECRET_KEY } from '../../constants.js';
+import jwt from 'jsonwebtoken';
 
 const registerUser = async (req, res) => {
     try {
@@ -46,7 +48,9 @@ const authenticateUser = async(req, res) => {
         if(user) {
             const isMatch = await bcrypt.compare(req.body.password, user.password);
             if(isMatch) {
-                return res.status(200).json({ message: "Login successful" });
+                const expiration = Math.floor(Date.now() / 1000) + (60 * 60 * 24); 
+                const token = jwt.sign({ ...user, exp: expiration }, SECRET_KEY);
+                return res.status(200).json({ message: "Login successful", token });
             } else {
                 res.status(400).json({ message: "User not found" });
             }
