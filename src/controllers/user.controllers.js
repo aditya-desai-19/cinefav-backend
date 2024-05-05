@@ -52,7 +52,7 @@ const authenticateUser = async(req, res) => {
                 const token = jwt.sign({ ...user, exp: expiration }, SECRET_KEY);
                 return res.status(200).json({ message: "Login successful", token });
             } else {
-                res.status(400).json({ message: "User not found" });
+                return res.status(400).json({ message: "User not found" });
             }
         }
 
