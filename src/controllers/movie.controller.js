@@ -34,7 +34,7 @@ const registerMovie = async (req, res) => {
 
 const getMovieById = async (req, res) => { 
     try {
-        const id = req.params.id;
+        const id = req.query.id;
         const movie = await Movie.findById({ _id: id });
         return res.status(200).json({ movie });
     } catch (error) {
@@ -44,7 +44,7 @@ const getMovieById = async (req, res) => {
 
 const updateMovieById = async (req, res) => {
     try {
-        const id = req.params.id;
+        const id = req.query.id;
         const { title, description, poster, imdbRating } = req.body;
 
         const movie = await Movie.findById({ _id: id });
@@ -66,4 +66,13 @@ const updateMovieById = async (req, res) => {
     }
 }
 
-export { getMovies, registerMovie, getMovieById, updateMovieById }
+const searchMovie = async (req, res) => {
+    try {
+        const movies = await Movie.find({ title: { $regex: `^${req.query.searchText}`, $options: 'i' }});
+        return res.status(200).json({ movies });
+    } catch (error) {
+        return res.status(500).json({ msg: "Something went wrong" });
+    }
+}
+
+export { getMovies, registerMovie, getMovieById, updateMovieById, searchMovie }
