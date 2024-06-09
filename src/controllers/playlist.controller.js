@@ -14,7 +14,7 @@ const createPlaylist = async (req, res) => {
         const { name, description, userId } = req.body;
 
         if(!name || !userId) {
-            return res.status(404).json({ msg: "Fields can't be empty" });
+            return res.status(400).json({ msg: "Fields can't be empty" });
         }
 
         const playlist = new Playlist({
@@ -67,7 +67,7 @@ const modifyPlaylist = async (req, res) => {
         const { id, movies } = req.body;
 
         if(!id || !movies.length) {
-            return res.status(404).json({ msg: "Fields can't be empty" });
+            return res.status(400).json({ msg: "Fields can't be empty" });
         }
 
         const playlist = await Playlist.findOne({ _id: id });

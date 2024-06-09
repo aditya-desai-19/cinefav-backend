@@ -7,6 +7,6 @@ playlistRouter.get('/', getPlaylists);
 playlistRouter.post('/', createPlaylist);
 playlistRouter.get('/:user', getPlaylistByUserId)
 playlistRouter.get('/:id', getPlaylistById)
-playlistRouter.put('/:id', modifyPlaylist);
+playlistRouter.put('/', modifyPlaylist);
 
 export default playlistRouter;
