@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 
 const watchlistSchema = new mongoose.Schema({
-    movies: [{ type: Schema.ObjectId, ref: 'Movie' }],
+    movies: {type: Array},
     user: {
         type: Schema.ObjectId, 
         ref: 'User',

@@ -8,8 +8,8 @@ const getMoviesFromWatchlist = async (req, res) => {
             return res.status(400).json({ message: "Invalid request" });
         }
 
-        const movies = await Watchlist.findOne({ user: id});
-        return res.status(200).json({ movies });
+        const watchlist = await Watchlist.findOne({ user: id});
+        return res.status(200).json({ watchlist });
 
     } catch (error) {
         return res.status(500).json({ msg: "Something went wrong" });
