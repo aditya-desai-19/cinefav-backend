@@ -45,7 +45,7 @@ const getMovieById = async (req, res) => {
 const updateMovieById = async (req, res) => {
     try {
         const id = req.query.id;
-        const { title, description, poster, imdbRating } = req.body;
+        const { title, description, poster, imdbRating, genre } = req.body;
 
         const movie = await Movie.findById({ _id: id });
         
@@ -57,6 +57,7 @@ const updateMovieById = async (req, res) => {
         movie.description = description ? description : movie.description;
         movie.poster = poster ? poster: movie.poster;
         movie.imdbRating = imdbRating ? imdbRating : movie.imdbRating;
+        movie.genre = genre ? genre : movie.genre;
 
         await movie.save();
 

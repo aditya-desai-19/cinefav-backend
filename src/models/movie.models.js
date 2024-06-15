@@ -16,7 +16,11 @@ const movieSchema = new mongoose.Schema({
     imdbRating: {
         type: Number,
         required: true
-    }
+    }, 
+    genre: {
+        type: String,
+        required: false
+    },
 }, {timestamps: true});
 
 export const Movie = mongoose.model("Movie", movieSchema);
