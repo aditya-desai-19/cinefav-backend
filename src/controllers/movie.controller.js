@@ -67,13 +67,4 @@ const updateMovieById = async (req, res) => {
     }
 }
 
-const searchMovie = async (req, res) => {
-    try {
-        const movies = await Movie.find({ title: { $regex: `^${req.query.searchText}`, $options: 'i' }});
-        return res.status(200).json({ movies });
-    } catch (error) {
-        return res.status(500).json({ msg: "Something went wrong" });
-    }
-}
-
-export { getMovies, registerMovie, getMovieById, updateMovieById, searchMovie }
+export { getMovies, registerMovie, getMovieById, updateMovieById }

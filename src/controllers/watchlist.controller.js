@@ -43,4 +43,35 @@ const addMovieToWatchlist = async (req, res) => {
     }
 }
 
-export {getMoviesFromWatchlist, addMovieToWatchlist }
+const removeMovieFromWatchlist = async (req, res) => {
+    try {
+        const { movieId, id } = req.body;
+
+        if(!movieId || !id) {
+            return res.status(400).json({ msg: "Invalid request" });
+        }
+
+        const watchlist = await Watchlist.findOne({ user: id});
+
+        if(watchlist === null) {
+            return res.status(400).json({ msg: "Invalid request" });
+        }
+
+        const index = watchlist.movies.findIndex(x => x._id.toString() === movieId);
+
+        if (index === -1) {
+            return res.status(400).json({ msg: "Movie not found in watchlist" });
+        }
+
+        // Remove the movie from the array
+        watchlist.movies.splice(index, 1);
+
+        await watchlist.save();
+
+        return res.status(200).json({ msg: "Successfully removed movie from watchlist" });
+    } catch (error) {
+        return res.status(500).json({ msg: "Something went wrong" });
+    }
+}
+
+export {getMoviesFromWatchlist, addMovieToWatchlist, removeMovieFromWatchlist }
