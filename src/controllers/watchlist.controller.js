@@ -34,10 +34,20 @@ const addMovieToWatchlist = async (req, res) => {
 
             await newWatchlist.save();
         } else {
-            watchlist.movies = [...watchlist.movies, movie];
-            await watchlist.save();
+            const movieIds = [];
+            for(let i = 0; i < watchlist.movies.length; i++) {
+                movieIds.push(watchlist.movies[i]?._id);
+            }
+
+            //checking if movie is already present
+            if(!movieIds.includes(movie?._id)) {
+                watchlist.movies = [...watchlist.movies, movie];
+                await watchlist.save();
+                return res.status(201).json({ msg: "Movie added to watchlist" });
+            }
+
+            return res.status(500).json({ msg: "Movie already present in watchlist" });
         }
-        return res.status(201).json({ msg: "Movie added to watchlist" });
     } catch (error) {
         return res.status(500).json({ msg: "Something went wrong" });
     }
