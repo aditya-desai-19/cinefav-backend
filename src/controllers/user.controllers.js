@@ -49,15 +49,17 @@ const authenticateUser = async(req, res) => {
             const isMatch = await bcrypt.compare(req.body.password, user.password);
             if(isMatch) {
                 const expiration = Math.floor(Date.now() / 1000) + (60 * 60 * 24); 
-                const token = jwt.sign({ name: user.userName, id: user._id, exp: expiration }, SECRET_KEY);
+                const userDetails = {name: user.userName, id: user._id, role: user.role};
+                const token = jwt.sign({ user: userDetails, exp: expiration }, SECRET_KEY);
                 return res.status(200).json({ message: "Login successful", token });
             } else {
                 return res.status(400).json({ message: "User not found" });
             }
+        } else {
+            return res.status(404).json({ message: "User not found" });
         }
 
     } catch (error) {
-        console.log("Error authenticating user: ", error);
         return res.status(500).json({ message: "Error authenticating user" });
     }
 }

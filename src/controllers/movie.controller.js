@@ -67,4 +67,23 @@ const updateMovieById = async (req, res) => {
     }
 }
 
-export { getMovies, registerMovie, getMovieById, updateMovieById }
+const deleteMovieById = async (req, res) => {
+    try {
+        const { id } = req.body;    
+
+        if(!id) {
+            return res.status(404).json({ msg: "Invalid request" });
+        }
+
+        const movie = await Movie.findById({ _id: id });
+        movie.deleted = true;
+
+        await movie.save();
+        
+        return res.status(200).json({ msg: "Successfully deleted the movie" });
+    } catch (error) {
+        return res.status(500).json({ msg: "Something went wrong" });
+    }
+}
+
+export { getMovies, registerMovie, getMovieById, updateMovieById, deleteMovieById }

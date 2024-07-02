@@ -21,6 +21,11 @@ const movieSchema = new mongoose.Schema({
         type: String,
         required: false
     },
+    deleted: {
+        type: Boolean, 
+        required: true,
+        default: false
+    }
 }, {timestamps: true});
 
 export const Movie = mongoose.model("Movie", movieSchema);
