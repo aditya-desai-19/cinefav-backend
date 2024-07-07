@@ -4,10 +4,10 @@ import { restrictUser } from '../middlewares/verifyToken.middlewares.js';
 
 const movieRouter = express.Router();
 
-movieRouter.get('/',getMovies);
-movieRouter.post('/', restrictUser("ADMIN"), registerMovie);
-movieRouter.get('/', restrictUser("ADMIN"), getMovieById);
-movieRouter.put('/', restrictUser("ADMIN"), updateMovieById);
-movieRouter.delete('/', restrictUser("ADMIN"), deleteMovieById);
+movieRouter.get('/', restrictUser(["ADMIN", "NORMAL"]), getMovies);
+movieRouter.post('/', restrictUser(["ADMIN"]), registerMovie);
+movieRouter.get('/:id', restrictUser(["ADMIN"]), getMovieById);
+movieRouter.put('/:id', restrictUser(["ADMIN"]), updateMovieById);
+movieRouter.delete('/:id', restrictUser(["ADMIN"]), deleteMovieById);
 
 export default movieRouter;

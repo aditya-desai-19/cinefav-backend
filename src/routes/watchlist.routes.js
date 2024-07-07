@@ -4,8 +4,8 @@ import { restrictUser } from '../middlewares/verifyToken.middlewares.js';
 
 const watchlistRouter = express.Router();
 
-watchlistRouter.get('/', restrictUser("NORMAL"), getMoviesFromWatchlist);
-watchlistRouter.post('/', restrictUser("NORMAL"), addMovieToWatchlist);
-watchlistRouter.put('/', restrictUser("NORMAL"), removeMovieFromWatchlist);
+watchlistRouter.get('/:id', restrictUser(["NORMAL"]), getMoviesFromWatchlist);
+watchlistRouter.post('/', restrictUser(["NORMAL"]), addMovieToWatchlist);
+watchlistRouter.put('/:id', restrictUser(["NORMAL"]), removeMovieFromWatchlist);
 
 export default watchlistRouter;

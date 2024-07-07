@@ -2,7 +2,7 @@ import { Movie } from "../models/movie.models.js";
 
 const getMovies = async (req, res) => {
     try {
-        const movies = await Movie.find({});
+        const movies = await Movie.find({ deleted: false });
         return res.status(200).json({ movies });
     } catch (error) {
         return res.status(500).json({ msg: "Something went wrong" });
@@ -34,7 +34,7 @@ const registerMovie = async (req, res) => {
 
 const getMovieById = async (req, res) => { 
     try {
-        const id = req.query.id;
+        const { id } = req.params;
         const movie = await Movie.findById({ _id: id });
         return res.status(200).json({ movie });
     } catch (error) {
@@ -44,7 +44,7 @@ const getMovieById = async (req, res) => {
 
 const updateMovieById = async (req, res) => {
     try {
-        const id = req.query.id;
+        const { id } = req.params;
         const { title, description, poster, imdbRating, genre } = req.body;
 
         const movie = await Movie.findById({ _id: id });
@@ -69,7 +69,7 @@ const updateMovieById = async (req, res) => {
 
 const deleteMovieById = async (req, res) => {
     try {
-        const { id } = req.body;    
+        const { id } = req.params;   
 
         if(!id) {
             return res.status(404).json({ msg: "Invalid request" });

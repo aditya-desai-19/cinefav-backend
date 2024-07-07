@@ -2,7 +2,7 @@ import { Watchlist } from "../models/watchlist.models.js";
 
 const getMoviesFromWatchlist = async (req, res) => {
     try {
-        const { id } = req.query;
+        const { id } = req.params;
 
         if(!id) {
             return res.status(400).json({ message: "Invalid request" });
@@ -55,13 +55,13 @@ const addMovieToWatchlist = async (req, res) => {
 
 const removeMovieFromWatchlist = async (req, res) => {
     try {
-        const { movieId, id } = req.body;
+        const { movieId } = req.body;
 
-        if(!movieId || !id) {
+        if(!movieId) {
             return res.status(400).json({ msg: "Invalid request" });
         }
 
-        const watchlist = await Watchlist.findOne({ user: id});
+        const watchlist = await Watchlist.findOne({ _id: req.params.id});
 
         if(watchlist === null) {
             return res.status(400).json({ msg: "Invalid request" });

@@ -30,9 +30,10 @@ const verifyToken = () => {
 }
 
 
-const restrictUser = (role) => {
+const restrictUser = (roles) => {
     return (req, res, next) => {
-        if(!req.user.role || req.user.role !== role) {
+        const user = {...req.user.user};
+        if(!user || !roles.includes(user.role)) {
             return res.status(403).json({ message: 'Unauthorized' });
         }
 
