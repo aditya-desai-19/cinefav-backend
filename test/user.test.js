@@ -5,9 +5,7 @@ import { registerUser, authenticateUser } from '../src/controllers/user.controll
 import { User } from '../src/models/user.models.js';
 import jwt from 'jsonwebtoken'
 
-describe('Test cases for user controller', function () {
-
-// describe('registerUser', () => {
+describe('Test cases for user registeration', function () {
     let req, res, next;
 
     beforeEach(() => {
