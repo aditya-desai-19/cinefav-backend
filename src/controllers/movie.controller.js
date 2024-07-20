@@ -19,6 +19,10 @@ const registerMovie = async (req, res) => {
         }
 
         const base64URL = getBase64URL(req.file);
+        if(!base64URL) {
+            return res.status(500).json({ msg: "Something went wrong" });
+        }
+
         const moviePoster = await uploadImage(base64URL);
 
         const movie = new Movie({
@@ -38,8 +42,17 @@ const registerMovie = async (req, res) => {
 
 const getMovieById = async (req, res) => { 
     try {
+        if(!req.params.id) {
+            return res.status(400).json({ msg: "Bad request" });
+        }
+
         const { id } = req.params;
         const movie = await Movie.findById({ _id: id });
+
+        if(!movie) {
+            return res.status(404).json({ msg: "Movie not found" });
+        }
+
         return res.status(200).json({ movie });
     } catch (error) {
         return res.status(500).json({ msg: "Something went wrong" });
@@ -48,6 +61,14 @@ const getMovieById = async (req, res) => {
 
 const updateMovieById = async (req, res) => {
     try {
+        if(!req.params.id) {
+            return res.status(400).json({ msg: "Bad request" });
+        }
+
+        if(!req.body.title || !req.body.description || !req.body.poster || !req.body.imdbRating || !req.body.genre) {
+            return res.status(400).json({ msg: "Bad request" });
+        }
+
         const { id } = req.params;
         const { title, description, poster, imdbRating, genre } = req.body;
 
@@ -57,11 +78,11 @@ const updateMovieById = async (req, res) => {
             return res.status(404).json({ msg: "Movie not found" });
         }
 
-        movie.title = title ? title : movie.title;
-        movie.description = description ? description : movie.description;
-        movie.poster = poster ? poster: movie.poster;
-        movie.imdbRating = imdbRating ? imdbRating : movie.imdbRating;
-        movie.genre = genre ? genre : movie.genre;
+        movie.title = title || movie.title;
+        movie.description = description || movie.description;
+        movie.poster = poster || movie.poster;
+        movie.imdbRating = imdbRating || movie.imdbRating;
+        movie.genre = genre || movie.genre;
 
         await movie.save();
 
@@ -73,13 +94,18 @@ const updateMovieById = async (req, res) => {
 
 const deleteMovieById = async (req, res) => {
     try {
-        const { id } = req.params;   
-
-        if(!id) {
-            return res.status(404).json({ msg: "Invalid request" });
+        if(!req.params.id) {
+            return res.status(400).json({ msg: "Bad request" });
         }
 
+        const { id } = req.params;  
+
         const movie = await Movie.findById({ _id: id });
+
+        if(!movie) {
+            return res.status(404).json({ msg: "Movie not found" });
+        }
+
         movie.deleted = true;
 
         await movie.save();

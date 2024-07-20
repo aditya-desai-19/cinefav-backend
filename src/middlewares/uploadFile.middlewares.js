@@ -15,10 +15,13 @@ const uploadImage = async (file) => {
 }
 
 const getBase64URL = (file) => {
-    const b64 = Buffer.from(file.buffer).toString("base64");
-    const dataURI = "data:" + file.mimetype + ";base64," + b64;
-    console.info({dataURI})
-    return dataURI;
+    if(file.mimetype.includes("image")) {
+        const b64 = Buffer.from(file.buffer).toString("base64");
+        const dataURI = "data:" + file.mimetype + ";base64," + b64;
+        console.info({dataURI})
+        return dataURI;
+    }
+    return null;
 }
 
 const storage = multer.memoryStorage()
