@@ -40,6 +40,10 @@ const authenticateUser = async(req, res) => {
         let user;
         user = await User.findOne({ email: req.body.userNameOrEmail });
 
+        if(!user) {
+            user = await User.findOne({ userName: req.body.userNameOrEmail });
+        }
+
         if(user) {
             const isMatch = await bcrypt.compare(req.body.password, user.password);
             if(isMatch) {

@@ -1,4 +1,5 @@
 import { Movie } from "../models/movie.models.js";
+import { getBase64URL, uploadImage } from "../middlewares/uploadFile.middlewares.js";
 
 const getMovies = async (req, res) => {
     try {
@@ -11,17 +12,20 @@ const getMovies = async (req, res) => {
 
 const registerMovie = async (req, res) => {
     try {
-        const { title, description, poster, imdbRating } = req.body;
+        const { title, description, rating } = req.body;
 
-        if(!title || !description || !poster || !imdbRating) {
+        if(!title || !description || !rating || !req?.file) {
             return res.status(404).json({ msg: "Fields can't be empty" });
         }
+
+        const base64URL = getBase64URL(req.file);
+        const moviePoster = await uploadImage(base64URL);
 
         const movie = new Movie({
             title: title,
             description: description,
-            poster: poster,
-            imdbRating: imdbRating
+            poster: moviePoster.url,
+            imdbRating: rating
         });
 
         await movie.save();
