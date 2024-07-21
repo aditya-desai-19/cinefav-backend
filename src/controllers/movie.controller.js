@@ -12,9 +12,9 @@ const getMovies = async (req, res) => {
 
 const registerMovie = async (req, res) => {
     try {
-        const { title, description, rating } = req.body;
+        const { title, description, imdbRating, genre } = req.body;
 
-        if(!title || !description || !rating || !req?.file) {
+        if(!title || !description || !imdbRating || !genre || !req?.file) {
             return res.status(404).json({ msg: "Fields can't be empty" });
         }
 
@@ -29,7 +29,8 @@ const registerMovie = async (req, res) => {
             title: title,
             description: description,
             poster: moviePoster.url,
-            imdbRating: rating
+            imdbRating: imdbRating,
+            genre: genre
         });
 
         await movie.save();
@@ -65,12 +66,25 @@ const updateMovieById = async (req, res) => {
             return res.status(400).json({ msg: "Bad request" });
         }
 
-        if(!req.body.title || !req.body.description || !req.body.poster || !req.body.imdbRating || !req.body.genre) {
+        if(!req.body.title || !req.body.description || !req.body.imdbRating || !req.body.genre) {
             return res.status(400).json({ msg: "Bad request" });
         }
 
         const { id } = req.params;
-        const { title, description, poster, imdbRating, genre } = req.body;
+        const { title, description, imdbRating, genre } = req.body;
+
+        let base64URL;
+        if(req.file) {
+            base64URL = getBase64URL(req.file);
+            if(!base64URL) {
+                return res.status(500).json({ msg: "Something went wrong" });
+            }
+        }
+
+        let moviePoster; 
+        if(base64URL) {
+            moviePoster = await uploadImage(base64URL);
+        }
 
         const movie = await Movie.findById({ _id: id });
         
@@ -80,7 +94,7 @@ const updateMovieById = async (req, res) => {
 
         movie.title = title || movie.title;
         movie.description = description || movie.description;
-        movie.poster = poster || movie.poster;
+        movie.poster = moviePoster?.url || movie.poster;
         movie.imdbRating = imdbRating || movie.imdbRating;
         movie.genre = genre || movie.genre;
 
