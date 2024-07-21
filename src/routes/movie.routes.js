@@ -8,7 +8,7 @@ const movieRouter = express.Router();
 movieRouter.get('/', restrictUser(["ADMIN", "NORMAL"]), getMovies);
 movieRouter.post('/', restrictUser(["ADMIN"]), upload.single("file"), registerMovie);
 movieRouter.get('/:id', restrictUser(["ADMIN"]), getMovieById);
-movieRouter.put('/:id', restrictUser(["ADMIN"]), updateMovieById);
+movieRouter.put('/:id', restrictUser(["ADMIN"]), upload.single("file"), updateMovieById);
 movieRouter.delete('/:id', restrictUser(["ADMIN"]), deleteMovieById);
 
 export default movieRouter;
